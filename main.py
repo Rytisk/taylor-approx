@@ -39,7 +39,7 @@ def plot():
             y1.append(func.subs(x,k))
         plt.plot(x1,y1,label='order '+str(j))
         y1 = []
-    # Plot the function to approximate (sine, in this case)
+    # Plot the function to approximate
     fs = list(map(lambda x0: math.exp(x0) * math.log(1+x0), x1))
     plt.plot(x1, fs,label='f of x')
     plt.xlim(x_lims)

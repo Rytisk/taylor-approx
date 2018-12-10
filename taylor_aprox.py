@@ -20,17 +20,18 @@ def taylor(function, x0, n, x = sy.Symbol('x')):
         i += 1
     return p
 
-def plot(f, x0 = 0, n = 5, by = 1, x_lims = [-5, 5], y_lims = [-5, 5], npoints = 800, x = sy.Symbol('x')):
+def plot(f, x0 = 0, n = 5, by = 1, x_lims = [-5, 5], y_lims = [-5, 5], npoints = 30000, x = sy.Symbol('x')):
     x1 = np.linspace(x_lims[0], x_lims[1], npoints)
     # Approximate up until n starting from 1 and using steps of by
     for j in range(1, n + 1, by):
         func = taylor(f, x0, j)
         taylor_lambda = sy.lambdify(x, func, "numpy")
         print('Taylor expansion at n=' + str(j), func)
-        plt.plot(x1, taylor_lambda(x1), label = 'Order '+ str(j))
+        plt.plot(x1, taylor_lambda(x1), label = str(j) + '-ojo nario')
+
     # Plot the function to approximate (sine, in this case)
     func_lambda = sy.lambdify(x, f, "numpy")
-    plt.plot(x1, func_lambda(x1), label = 'Function of x')
+    plt.plot(x1, func_lambda(x1), label = 'e^x * ln(1 + x)')
     
     plt.xlim(x_lims)
     plt.ylim(y_lims)
@@ -38,7 +39,6 @@ def plot(f, x0 = 0, n = 5, by = 1, x_lims = [-5, 5], y_lims = [-5, 5], npoints =
     plt.ylabel('y')
     plt.legend()
     plt.grid(True)
-    plt.title('Taylor series approximation')
     plt.show()
 
 # Define the variable and the function to approximate
