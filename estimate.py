@@ -2,6 +2,9 @@ import sympy as sy
 import numpy as np
 from sympy.functions import sin, cos, ln, exp
 import matplotlib.pyplot as plt
+import sys
+import math
+
 plt.style.use("ggplot")
 
 # Factorial function
@@ -25,17 +28,48 @@ def lagrange(function, x0, n, x = sy.Symbol('x'), E = sy.Symbol('E')):
 	p = (function.diff(x, i).subs(x, E))/(factorial(i))*(x - x0)**i
 	return p
 
-x = sy.Symbol('x')
-E = sy.Symbol('E')
-f = exp(x) * ln(1 + x)
+def run(f, n):
+	func = taylor(f, 0, n)
+	print('Taylor expansion at n=' + str(n), func)
 
-func = taylor(f, 0, 5)
-taylor_lambda = sy.lambdify(x, func, "numpy")
-print('Taylor expansion at n=' + str(5), func)
+	lagr = lagrange(f, 0, n)
+	lagr_lambda = sy.lambdify((x,E), lagr, "numpy")
+	print('Lagrange remainder', lagr)
+	print('\n')
+	print("Accuracy: {0:.10f}".format(lagr_lambda(1, 1)))
 
-lagr = lagrange(f, 0, 5)
-lagr_lambda = sy.lambdify((x,E), lagr, "numpy")
-print('Lagrange remainder', lagr)
+def run_till_accuracy(f, acc):
+	l_acc = 0
+	n = 0
+	while True:
+		lagr = lagrange(f, 0, n)
+		lagr_lambda = sy.lambdify((x,E), lagr, "numpy")
+		l_acc = abs(lagr_lambda(1, 1))
+		if l_acc <= acc:
+			break
+		n = n + 1
+	print("To reach accuracy of {}, {} terms are needed".format(acc, n))
+	print("Accuracy: {0:.10f}".format(l_acc))
 
-print('\n')
-print(lagr_lambda(1, 0))
+def usage():
+	print("-n [order]")
+	print("-a [accuracy]")
+	exit(0)
+
+if __name__ == "__main__":
+	x = sy.Symbol('x')
+	E = sy.Symbol('E')
+	f = exp(x) * ln(1 + x)
+
+	if(len(sys.argv) == 3):
+		arg = sys.argv[1]
+		if arg == "-n":
+			n = int(sys.argv[2])
+			run(f, n)
+		elif arg == "-a":
+			acc = float(sys.argv[2])
+			run_till_accuracy(f, acc)
+		else:
+			usage()
+	else:
+		usage()	
