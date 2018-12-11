@@ -2,7 +2,7 @@ import sympy as sy
 import numpy as np
 from sympy.functions import sin, cos, ln, exp
 import matplotlib.pyplot as plt
-plt.style.use("ggplot")
+#plt.style.use("ggplot")
 
 # Factorial function
 def factorial(n):
@@ -20,7 +20,7 @@ def taylor(function, x0, n, x = sy.Symbol('x')):
 		i += 1
 	return p
 
-def plot(f, x0 = 0, n = 5, by = 1, x_lims = [-5, 5], y_lims = [-5, 5], npoints = 30000, x = sy.Symbol('x')):
+def plot(f, x0 = 0, n = 5, by = 1, x_lims = [-5, 5], y_lims = [-5, 5], npoints = 2500000, x = sy.Symbol('x')):
 	x1 = np.linspace(x_lims[0], x_lims[1], npoints)
 	# Approximate up until n starting from 1 and using steps of by
 	for j in range(1, n + 1, by):
@@ -29,7 +29,6 @@ def plot(f, x0 = 0, n = 5, by = 1, x_lims = [-5, 5], y_lims = [-5, 5], npoints =
 		print('Taylor expansion at n=' + str(j), func)
 		plt.plot(x1, taylor_lambda(x1), label = str(j) + '-ojo nario')
 
-	# Plot the function to approximate (sine, in this case)
 	func_lambda = sy.lambdify(x, f, "numpy")
 	plt.plot(x1, func_lambda(x1), label = 'e^x * ln(1 + x)')
 	
@@ -38,7 +37,7 @@ def plot(f, x0 = 0, n = 5, by = 1, x_lims = [-5, 5], y_lims = [-5, 5], npoints =
 	plt.xlabel('x')
 	plt.ylabel('y')
 	plt.legend()
-	plt.grid(True)
+	plt.grid(True, axis='both')
 	plt.show()
 
 # Define the variable and the function to approximate
